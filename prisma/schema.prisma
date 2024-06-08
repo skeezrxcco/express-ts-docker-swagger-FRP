@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model apps {
+  id           String         @id
+  name         String
+  description  String?
+  apiKey       String         @unique
+  secretKey    String
+  domain       String
+  paymentUrl   String
+  walletId     String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime
+  wallets      wallets        @relation(fields: [walletId], references: [address])
+  transactions transactions[]
+  tx_intents   tx_intents[]
+
+  @@index([walletId], map: "apps_walletId_fkey")
+}
+
+model transactions {
+  id        String   @id
+  txId      String
+  appId     String
+  walletId  String
+  amount    Float
+  currency  String
+  status    String
+  data      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  apps      apps     @relation(fields: [appId], references: [id])
+  wallets   wallets  @relation(fields: [walletId], references: [address])
+
+  @@index([appId], map: "transactions_appId_fkey")
+  @@index([walletId], map: "transactions_walletId_fkey")
+}
+
+model tx_intents {
+  id        String   @id
+  appId     String
+  walletId  String
+  amount    Float
+  currency  String
+  status    String
+  data      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  apps      apps     @relation(fields: [appId], references: [id])
+  wallets   wallets  @relation(fields: [walletId], references: [address])
+
+  @@index([appId], map: "tx_intents_appId_fkey")
+  @@index([walletId], map: "tx_intents_walletId_fkey")
+}
+
+model wallets {
+  address      String         @unique
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime
+  apps         apps[]
+  transactions transactions[]
+  tx_intents   tx_intents[]
+}

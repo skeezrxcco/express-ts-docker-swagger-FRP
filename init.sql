@@ -1,5 +1,7 @@
-GRANT ALL PRIVILEGES ON *.* TO 'user'@'%' WITH GRANT OPTION;
+CREATE DATABASE IF NOT EXISTS transakt_v1;
+USE transakt_v1;
+
+-- Ensure the user is created with necessary privileges
+CREATE USER IF NOT EXISTS 'user'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON transakt_v1.* TO 'user'@'%';
 FLUSH PRIVILEGES;
-
-
-CREATE DATABASE IF NOT EXISTS `transakt_v1_shadow` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
