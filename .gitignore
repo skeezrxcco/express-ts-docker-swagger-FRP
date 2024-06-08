@@ -34,3 +34,6 @@ docs/
 # Ignore OS-specific files
 .DS_Store
 Thumbs.db
+
+# Ignore mysql_data
+mysql_data/
